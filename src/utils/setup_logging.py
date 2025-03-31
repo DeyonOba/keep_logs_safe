@@ -41,6 +41,9 @@ LOGGING_CONFIG = {
         "level_based": {"()": LevelBaseFormatter},
         "default": {
             "format": "%(asctime)s: %(levelname)s %(name)s:[%(filename)s:%(module)s:%(lineno)s] %(message)s" 
+        },
+        "db_formatter": {
+            "format": "%(asctime)s: %(levelname)s %(name)s:[%(filename)s:%(module)s:%(lineno)s]\n%(message)s"
         }
     },
 
@@ -55,9 +58,17 @@ LOGGING_CONFIG = {
             "class": "logging.handlers.RotatingFileHandler",
             "filename": "src/logs/api.log",
             "mode": "a",
-            "maxBytes": 1000,
+            "maxBytes": 10_000,
             "backupCount": 5, # Roll over log files :: api.log.1 to api.log.5
             "formatter": "default"
+        },
+        "db_file_handler": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "src/logs/db.log",
+            "mode": "a",
+            "maxBytes": 100_000,
+            "backupCount": 5, # Roll over log files :: api.log.1 to api.log.5
+            "formatter": "db_formatter"
         }
     },
     "loggers": {
@@ -65,7 +76,32 @@ LOGGING_CONFIG = {
             "level": "DEBUG",
             "handlers": ["console", "api_file_handler"],
             "propagate": False,
-        }
+        },
+        # "pymongo": {
+        #     "level": "DEBUG",
+        #     "handlers": ["db_file_handler"],
+        #     "propagate": False,
+        # },        
+        "pymongo.command": {
+            "level": "DEBUG",
+            "handlers": ["db_file_handler"],
+            "propagate": False,
+        },
+        # "pymongo.server": {
+        #     "level": "INFO",
+        #     "handlers": ["db_file_handler"],
+        #     "propagate": False,
+        # },
+        # "pymongo.pool": {
+        #     "level": "INFO",
+        #     "handlers": ["db_file_handler"],
+        #     "propagate": False,
+        # },
+        # "pymongo.cursor": {
+        #     "level": "DEBUG",
+        #     "handlers": ["db_file_handler"],
+        #     "propagate": False,
+        # }
     }
 }
 
